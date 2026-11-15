@@ -14,9 +14,10 @@ skills runs and competition footage published **since 1 August 2026**. Data coll
 | `videos-top20-last30days.csv` | The ranked 20 published 14 Oct – 14 Nov 2026, same columns (22 rows: the top 20 plus the two just outside). |
 | `videos-below-cut.csv` | Ranks 51–68 in the August window, plus five videos deliberately excluded (with the reason). |
 
-**Live on the web:** <https://miayumengli.github.io/vex-override-war-room/>
+**Live on the web:** <https://miayumengli.github.io/vex-override-game-room/>
 Public, no sign-in. Served by GitHub Pages from `main` in
-[miayumengli/vex-override-war-room](https://github.com/miayumengli/vex-override-war-room).
+[miayumengli/vex-override-game-room](https://github.com/miayumengli/vex-override-game-room).
+Renamed from `vex-override-war-room` on 2026-11-15; GitHub redirects the old repo URL.
 
 Also published as a private Claude artifact (same content, sign-in required):
 <https://claude.ai/artifact/EZVjNUpmo4mrGsb4bcfKNE>
