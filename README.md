@@ -4,8 +4,6 @@ Research into YouTube coverage of the **Override** season (V5RC 2026–2027): ro
 skills runs and competition footage published **since 1 August 2026**. Data collected
 14 November 2026.
 
-> The season is called **Override**, not "Overrider".
-
 ## Files
 
 | File | What it is |
