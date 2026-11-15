@@ -8,7 +8,7 @@ skills runs and competition footage published **since 1 August 2026**. Data coll
 
 | File | What it is |
 |---|---|
-| `override-war-room.html` | **VEX/RECF 2026-2027 War Room — Override/Pinnacle** — the full write-up as a standalone page. Three tabbed views: the season 50, the recent 20, and the channels. Each list has a summary per video; the season view also carries trends, an events table and the below-cut sections. Open it in a browser. |
+| `override-game-room.html` | **VEX/RECF 2026-2027 Game Room — Override/Pinnacle** — the full write-up as a standalone page. Three tabbed views: the season 50, the recent 20, and the channels. Each list has a summary per video; the season view also carries trends, an events table and the below-cut sections. Open it in a browser. |
 | `index.html` | Entry point for GitHub Pages — forwards to the page above so the root URL works. Not used locally. |
 | `videos-top50.csv` | The ranked 50 since 1 Aug: rank, title, channel, category, publish date, duration, views, URL. |
 | `videos-top20-last30days.csv` | The ranked 20 published 14 Oct – 14 Nov 2026, same columns (22 rows: the top 20 plus the two just outside). |
@@ -22,7 +22,7 @@ Renamed from `vex-override-war-room` on 2026-11-15; GitHub redirects the old rep
 Also published as a private Claude artifact (same content, sign-in required):
 <https://claude.ai/artifact/EZVjNUpmo4mrGsb4bcfKNE>
 
-`override-war-room.html` in this folder is the **source of truth** for that artifact.
+`override-game-room.html` in this folder is the **source of truth** for that artifact.
 Edit it here and republish to the URL above; the artifact keeps the same link across
 versions. Do not keep a second copy elsewhere.
 
@@ -126,7 +126,7 @@ Teams recurring across reveals, pit interviews and eliminations: 471B, 3946E, 10
   line (rank 50 at 6,215 vs rank 51 at 6,164) will drift.
 - Summaries come from each video's own title, description and chapter list. Where a team
   posted no description, the summary says only what the title and series format establish.
-- **Scope vs. title.** The page is titled "VEX/RECF 2026-2027 War Room — Override/Pinnacle",
+- **Scope vs. title.** The page is titled "VEX/RECF 2026-2027 Game Room — Override/Pinnacle",
   but the searches behind it targeted Override. RECF Pinnacle appears only where a team said so
   themselves — 23851C and 31218W in their reveals, 11811A in its robot explanation. No
   Pinnacle-specific sweep has been run, so Pinnacle coverage here is incidental, not
