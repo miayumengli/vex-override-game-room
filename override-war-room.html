@@ -1,0 +1,439 @@
+<title>VEX/RECF 2026-2027 War Room</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: a scouting sheet — sticky filter rail above a ranked list of season film */
+:root{
+  --bg:#F5F7FA; --surface:#FFFFFF; --surface-2:#EDF1F6; --line:#DCE3EC;
+  --fg:#101722; --muted:#5B6878;
+  --accent:#0B52C4; --accent-soft:#E3EBFA; --on-accent:#FFFFFF;
+  --hot:#C62F28; --hot-soft:#FBE6E4;
+  --font-display:"Space Grotesk","Segoe UI",system-ui,sans-serif;
+  --font-body:"Inter","Segoe UI",system-ui,sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,"Cascadia Mono",Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0D1117; --surface:#161C25; --surface-2:#1D242F; --line:#2A323E;
+  --fg:#E7ECF3; --muted:#97A3B4;
+  --accent:#6AA3FF; --accent-soft:#17263F; --on-accent:#0D1117;
+  --hot:#FF7B6E; --hot-soft:#331A17;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#0D1117; --surface:#161C25; --surface-2:#1D242F; --line:#2A323E;
+  --fg:#E7ECF3; --muted:#97A3B4;
+  --accent:#6AA3FF; --accent-soft:#17263F; --on-accent:#0D1117;
+  --hot:#FF7B6E; --hot-soft:#331A17;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--font-body);line-height:1.55;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:10}
+.wrap{max-width:900px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px}
+a{color:inherit}
+h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0}
+
+header{padding-block:40px 24px;border-bottom:1px solid var(--line)}
+.eyebrow{font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 12px}
+h1{font-size:clamp(28px,5.4vw,44px);font-weight:700;letter-spacing:-.02em;line-height:1.08;overflow-wrap:break-word}
+.h1-sub{display:block;margin-top:7px;font-size:clamp(17px,3vw,26px);font-weight:500;letter-spacing:-.01em;color:var(--accent)}
+.lede{margin:14px 0 0;max-width:64ch;color:var(--muted);font-size:15px}
+.facts{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 0;padding:0}
+.fact{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:9px 13px;min-width:0;text-align:left;font-family:inherit;color:inherit}
+.fact .k{display:block;font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.fact .v{display:block;margin:3px 0 0;font-family:var(--font-display);font-size:15px;font-weight:500;font-variant-numeric:tabular-nums}
+button.fact{cursor:pointer;transition:background .12s,border-color .12s}
+button.fact:hover{border-color:var(--accent)}
+button.fact[aria-pressed="true"]{background:var(--accent);border-color:var(--accent)}
+button.fact[aria-pressed="true"] .k{color:var(--on-accent);opacity:.8}
+button.fact[aria-pressed="true"] .v{color:var(--on-accent)}
+button.fact:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.tabhint{margin:10px 0 0;font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){button.fact{transition:none}}
+
+.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--bg);padding-block:14px;border-bottom:1px solid var(--line);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.rail-label{font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-right:2px}
+.chip{font-family:var(--font-body);font-size:13px;font-weight:500;color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:6px 13px;cursor:pointer}
+.chip:hover{color:var(--fg)}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.chip:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+.list{list-style:none;margin:0;padding:0}
+.row{display:grid;grid-template-columns:40px 1fr auto;gap:4px 14px;padding:18px 0;border-bottom:1px solid var(--line)}
+.rank{font-family:var(--font-mono);font-size:15px;font-weight:500;color:var(--muted);font-variant-numeric:tabular-nums;padding-top:2px}
+.vid{min-width:0}
+.vid-title{font-family:var(--font-display);font-size:16px;font-weight:500;line-height:1.3;text-decoration:none}
+.vid-title:hover{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+.sub{margin:6px 0 0;font-size:12.5px;color:var(--muted);display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-variant-numeric:tabular-nums}
+.sum{margin:7px 0 0;font-size:14px;color:var(--muted);max-width:66ch}
+.tag{font-family:var(--font-mono);font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:3px 7px;border-radius:4px;background:var(--surface-2);color:var(--muted)}
+.tag.is-key{background:var(--accent-soft);color:var(--accent)}
+.tag.is-wr{background:var(--hot-soft);color:var(--hot)}
+.count{text-align:right;font-family:var(--font-mono);font-variant-numeric:tabular-nums;white-space:nowrap;padding-top:2px}
+.count b{display:block;font-size:15px;font-weight:600;letter-spacing:-.01em}
+.count span{display:block;font-size:11px;color:var(--muted);margin-top:2px}
+@media (max-width:520px){
+  .row{grid-template-columns:30px 1fr;gap:2px 10px}
+  .count{grid-column:2;text-align:left;display:flex;gap:8px;align-items:baseline;margin-top:8px;padding-top:0}
+  .count b{font-size:14px}
+  .count span{margin-top:0}
+}
+.empty{padding:28px 0;color:var(--muted);font-size:14px}
+
+section{padding-block:40px 0}
+h2{font-size:21px;font-weight:700;letter-spacing:-.01em}
+.sec-note{margin:8px 0 20px;color:var(--muted);font-size:14px;max-width:64ch}
+.notes{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(248px,1fr))}
+.note{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;min-width:0}
+.note h3{font-size:14px;font-weight:700;margin-bottom:6px}
+.note p{margin:0;font-size:14px;color:var(--muted)}
+.note a{color:var(--accent)}
+.teams{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.team{font-family:var(--font-mono);font-size:13px;font-weight:600;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:6px 10px}
+.also{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.also li{font-size:14px;display:flex;flex-wrap:wrap;gap:8px;align-items:baseline}
+.also a{color:var(--accent);text-decoration:none}
+.also a:hover{text-decoration:underline;text-underline-offset:3px}
+.also .count-inline{font-family:var(--font-mono);font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.chan{display:flex;flex-direction:column;gap:7px}
+.chan-name{font-family:var(--font-display);font-size:15px;font-weight:700;text-decoration:none;line-height:1.25}
+.chan-name:hover{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+.chan-meta{font-family:var(--font-mono);font-size:11px;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 10px}
+.chan-count{font-family:var(--font-mono);font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;background:var(--accent-soft);color:var(--accent);padding:3px 7px;border-radius:4px;align-self:flex-start}
+.tbl-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:420px}
+th,td{text-align:left;padding:9px 12px 9px 0;border-bottom:1px solid var(--line)}
+th{font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600}
+td.num{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+.recent{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;margin-top:28px}
+.mlist{list-style:none;margin:14px 0 0;padding:0}
+.mrow{display:grid;grid-template-columns:30px 1fr auto;gap:3px 12px;padding:13px 0;border-top:1px solid var(--line)}
+.mrow:first-child{border-top:0;padding-top:4px}
+.mrank{font-family:var(--font-mono);font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;padding-top:2px}
+.mtitle{font-family:var(--font-display);font-size:15px;font-weight:500;line-height:1.3;text-decoration:none}
+.mtitle:hover{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+.msub{margin:4px 0 0;font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.msum{margin:5px 0 0;font-size:13.5px;color:var(--muted);max-width:66ch}
+.mcount{font-family:var(--font-mono);font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap;padding-top:2px;text-align:right}
+@media (max-width:520px){.mrow{grid-template-columns:26px 1fr}.mcount{grid-column:2;padding-top:0;margin-top:5px;text-align:left}}
+.band{margin-top:48px;padding-top:4px}
+footer{margin-top:44px;padding-top:20px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+footer p{margin:0 0 8px;max-width:70ch}
+footer a{color:var(--accent)}
+</style>
+
+<div class="wrap">
+<header>
+  <h1>VEX/RECF 2026-2027 War Room<span class="h1-sub">Override/Pinnacle</span></h1>
+  <p class="lede">The most-watched Override videos — robot reveals, pit build walkthroughs, signature-event eliminations, skills runs and design analysis — ranked by view count, each with what it actually covers. Two lists — the season since 1 August, and the last thirty days on their own — plus the channels behind them. Pick a view below.</p>
+  <p class="tabhint" id="tabhint">Choose a list</p>
+  <div class="facts" role="group" aria-labelledby="tabhint">
+    <button type="button" class="fact" id="tab-season" data-panel="panel-season" aria-pressed="true" aria-controls="panel-season"><span class="k">Season list</span><span class="v">Top 50 since 1 Aug</span></button>
+    <button type="button" class="fact" id="tab-recent" data-panel="panel-recent" aria-pressed="false" aria-controls="panel-recent"><span class="k">Recent list</span><span class="v">Top 20 since 14 Oct</span></button>
+    <button type="button" class="fact" id="tab-channels" data-panel="panel-channels" aria-pressed="false" aria-controls="panel-channels"><span class="k">Popular channels</span><span class="v">4 worth following</span></button>
+    <div class="fact"><span class="k">Pool screened</span><span class="v">198 videos · 11/14/2026</span></div>
+  </div>
+</header>
+
+<div id="panel-recent" hidden>
+<section class="recent">
+  <h2>The last 30 days</h2>
+  <p class="sec-note" style="margin-bottom:0">Top 20 published 14 October – 14 November 2026, ranked by views, same method as the season list. None of these appear in the season list: the newest video there is 13 October. The mix has shifted — not one reveal in the top ten, and only five across the twenty, against five build explainers, four skills runs and four analysis pieces.</p>
+  <ol class="mlist">
+    <li class="mrow"><span class="mrank">01</span><div><a class="mtitle" href="https://www.youtube.com/watch?v=mbBB18LPQ2Y">RATCHETING CLAW Explanation</a><p class="msub">Joseph973 · 16 Oct · 3:03 · build</p><p class="msum">A close-up build guide to a new claw type that ratchets, with linked reference photos. The most-watched Override video of the past month by a wide margin, and a sign that mechanism explainers now outdraw reveals.</p></div><div class="mcount">18,480</div></li>
+    <li class="mrow"><span class="mrank">02</span><div><a class="mtitle" href="https://www.youtube.com/watch?v=Z_6nM-qkuCs">138 Auto Skills with a 3-Second Stop Time</a><p class="msub">ragerbyt · 24 Oct · 0:59 · skills</p><p class="msum">An unofficial autonomous skills run scoring 138 with three seconds left on the clock. The margin, not the score, is the point.</p></div><div class="mcount">13,177</div></li>
+    <li class="mrow"><span class="mrank">03</span><div><a class="mtitle" href="https://www.youtube.com/watch?v=mL1ko87pBzM">Rating Your VEX Autos (and a Few Robot Fails)</a><p class="msub">Luke does robotics · 27 Oct · 11:47 · analysis</p><p class="msum">Viewer-submitted autonomous runs rated on route cleanliness, match loading and claw choice, opening with bent intakes and questionable bracing. Chaptered: fails at 0:00, auto ratings from 5:03.</p></div><div class="mcount">9,655</div></li>
+    <li class="mrow"><span class="mrank">04</span><div><a class="mtitle" href="https://www.youtube.com/watch?v=ZP7P7TNM_Jg">6741R Redacted — Robot Explanation</a><p class="msub">6741R Redacted · 29 Oct · 16:15 · build</p><p class="msum">A sixteen-minute walkthrough of the team's early-season robot. The longest build explanation published in the window.</p></div><div class="mcount">9,000</div></li>
+    <li class="mrow"><span class="mrank">05</span><div><a class="mtitle" href="https://www.youtube.com/watch?v=uXV8XL7hWcY">1698z — 236 Official Skills</a><p class="msub">1698z · 18 Oct · 2:13 · skills</p><p class="msum">An official 236-point run that put the team sixth in the world at the time of posting.</p></div><div class="mcount">8,077</div></li>
+    <li class="mrow"><span class="mrank">06</span><div><a class="mtitle" href="https://www.youtube.com/watch?v=7dVupcnU_eI">66799T — 256 Official Skills</a><p class="msub">Samuel Cheng · 25 Oct · 2:14 · skills</p><p class="msum">256 points, matching the world record set thirteen days earlier, with the team ranked second in the world and openly looking for an alliance. Same team as #2 on the season list.</p></div><div class="mcount">7,760</div></li>
+    <li class="mrow"><span class="mrank">07</span><div><a class="mtitle" href="https://www.youtube.com/watch?v=fUHE02P_EVM">8682A Apollo — Sig Rush Recap</a><p class="msub">Apollo8682A · 17 Oct · 3:57 · match</p><p class="msum">Apollo's recap of the Sig Rush event, ending with a second Vegas qualification. A team-side counterpart to the neutral match channels.</p></div><div class="mcount">7,510</div></li>
+    <li class="mrow"><span class="mrank">08</span><div><a class="mtitle" href="https://www.youtube.com/watch?v=I-3eoYE7gOo">Highest-Scoring Override Match</a><p class="msub">Luke does robotics · 26 Oct · 6:58 · analysis</p><p class="msum">A breakdown of a local final that finished 156–165 — 20850Z/20850W against 2145X/2145V — covering fast stacking, disrupting pickups, and when to abandon a toggle. The highest-scoring match of the season so far.</p></div><div class="mcount">7,506</div></li>
+    <li class="mrow"><span class="mrank">09</span><div><a class="mtitle" href="https://www.youtube.com/watch?v=mkzAkOmhDP8">CASCADE ELEVATOR Explanation</a><p class="msub">Joseph973 · 6 Nov · 8:04 · build</p><p class="msum">How to build V5 elevators, cascade and continuous, and the difference between them. The most recent video in either list, and the second Joseph973 explainer in this ten.</p></div><div class="mcount">7,291</div></li>
+    <li class="mrow"><span class="mrank">10</span><div><a class="mtitle" href="https://www.youtube.com/watch?v=Q8dUEoNqMoo">The Most UNIQUE VEX V5 Override Robot Yet?</a><p class="msub">The VEX Analyst · 22 Oct · 8:02 · analysis</p><p class="msum">A breakdown of 33344C Catastrophe's unconventional cascade design and its FRC Team 2910 inspiration. Pair it with that team's own <a href="https://www.youtube.com/watch?v=wSNinCs6XFo">Pits &amp; Parts walkthrough</a>, published 3 November.</p></div><div class="mcount">6,977</div></li>
+    <li class="mrow"><span class="mrank">11</span><div><a class="mtitle" href="https://www.youtube.com/watch?v=kP3eE1Z7eCs">2394V Formula 5 — Fall Reveal</a><p class="msub">2394V - Formula 5 · 23 Oct · 1:01 · reveal</p><p class="msum">The highest-ranked reveal of the month, and the team notes they were already rebuilding within two weeks. The robot gets a full design review at #17.</p></div><div class="mcount">6,855</div></li>
+    <li class="mrow"><span class="mrank">12</span><div><a class="mtitle" href="https://www.youtube.com/watch?v=Z8oxWA7bbnQ">8076Y Chonky — Fall Reveal</a><p class="msub">8076 Robotics · 30 Oct · 0:53 · reveal</p><p class="msum">A 53-second fall reveal from Singapore's HCI programme, cut to music. Footage only, no build commentary.</p></div><div class="mcount">6,505</div></li>
+    <li class="mrow"><span class="mrank">13</span><div><a class="mtitle" href="https://www.youtube.com/watch?v=nEVy2V2yq7Q">95071V — Early Season Robot Explanation</a><p class="msub">Saratoga Velocity · 1 Nov · 8:22 · build</p><p class="msum">The build walkthrough behind the 226-point skills run at #17 on the season list. The team explains the robot rather than just running it.</p></div><div class="mcount">6,307</div></li>
+    <li class="mrow"><span class="mrank">14</span><div><a class="mtitle" href="https://www.youtube.com/watch?v=2NlbEbMvByQ">Full Finals — Harbor Havoc Signature</a><p class="msub">VEX Vault · 17 Oct · 5:29 · match</p><p class="msum">Both finals matches from Portland, Maine: 10102Z &amp; 1698Z against 1764P &amp; 197E. The only signature-event finals in this twenty.</p></div><div class="mcount">5,741</div></li>
+    <li class="mrow"><span class="mrank">15</span><div><a class="mtitle" href="https://www.youtube.com/watch?v=RBxjJEMgYz4">6741R — 108 Programming Skills</a><p class="msub">6741R Redacted · 22 Oct · 0:58 · skills</p><p class="msum">An autonomous-only run of 108 points. Same team as the sixteen-minute robot explanation at #4, posted a week earlier.</p></div><div class="mcount">5,145</div></li>
+    <li class="mrow"><span class="mrank">16</span><div><a class="mtitle" href="https://www.youtube.com/watch?v=0hEjy3louAE">10909K Kosmik Kokonuts — Autumn Reveal</a><p class="msub">Kosmik Kokonuts · 26 Oct · 1:46 · reveal</p><p class="msum">A longer-form autumn reveal at nearly two minutes, with more cycle footage than the typical 40-second cut.</p></div><div class="mcount">4,869</div></li>
+    <li class="mrow"><span class="mrank">17</span><div><a class="mtitle" href="https://www.youtube.com/watch?v=bH0W5fovJHE">This Cascade Has Some GENIUS Design Features!</a><p class="msub">The VEX Analyst · 24 Oct · 12:27 · analysis</p><p class="msum">A design review of 2394V Formula 5's cascade robot — the one revealed at #11, published the next day. One of two cascade breakdowns this channel ran in the month.</p></div><div class="mcount">4,811</div></li>
+    <li class="mrow"><span class="mrank">18</span><div><a class="mtitle" href="https://www.youtube.com/watch?v=wSNinCs6XFo">33344C Catastrophe — Pits &amp; Parts</a><p class="msub">FUN Robotics Network · 3 Nov · 11:08 · build</p><p class="msum">A low-profile robot with a tall cascade lift, covering how the team solved packaging and centre-of-gravity problems. The robot analysed at #10, now explained by its builders.</p></div><div class="mcount">4,733</div></li>
+    <li class="mrow"><span class="mrank">19</span><div><a class="mtitle" href="https://www.youtube.com/watch?v=Sj3ClLb0VyU">1698z No Way — Fall Reveal</a><p class="msub">1698z · 15 Oct · 0:40 · reveal</p><p class="msum">A 40-second reveal posted at 4am, by the team's own account. Same team as the 236-point skills run at #5.</p></div><div class="mcount">4,591</div></li>
+    <li class="mrow"><span class="mrank">20</span><div><a class="mtitle" href="https://www.youtube.com/watch?v=NtKlTCkHTlA">4125A ASTRAL — Early Season Reveal</a><p class="msub">Astral4125A · 30 Oct · 0:55 · reveal</p><p class="msum">A reveal pointed at UK Regionals — one of the few non-US, non-Asian entries in either list.</p></div><div class="mcount">4,224</div></li>
+  </ol>
+  <p class="msum" style="margin-top:14px">Just outside: <a href="https://www.youtube.com/watch?v=ETfgA5W4qHE" style="color:var(--accent)">148 Driving Skills, unofficial</a> (4,147 · 16 Oct) and <a href="https://www.youtube.com/watch?v=GfdeArE7UQ4" style="color:var(--accent)">Caution Tape Halloween Qualifier — Final Four</a> (3,833 · 31 Oct).</p>
+</section>
+
+</div>
+
+<div id="panel-season">
+<section class="band" style="padding-block:0">
+  <h2>The season so far — top 50 since 1 August</h2>
+  <p class="sec-note">39,736 views down to 6,215, out of 68 videos screened in that window.</p>
+</section>
+
+<div class="rail" role="group" aria-label="Filter by video type">
+  <span class="rail-label">Filter</span>
+  <button class="chip" id="f-all" data-filter="all" aria-pressed="true">All 50</button>
+  <button class="chip" id="f-reveal" data-filter="reveal" aria-pressed="false">Reveals · 24</button>
+  <button class="chip" id="f-build" data-filter="build" aria-pressed="false">Build breakdowns · 8</button>
+  <button class="chip" id="f-match" data-filter="match" aria-pressed="false">Matches · 9</button>
+  <button class="chip" id="f-skills" data-filter="skills" aria-pressed="false">Skills · 4</button>
+  <button class="chip" id="f-analysis" data-filter="analysis" aria-pressed="false">Analysis · 5</button>
+</div>
+
+<ol class="list" id="list">
+
+<li class="row" data-cat="reveal"><span class="rank">01</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=AuNkyH8FBdE">16610A Snacky Cakes — Early Season Reveal</a><p class="sub"><span class="tag is-key">Reveal</span> Snacky Cakes Robotics · 6 Aug · 1:07</p><p class="sum">The most-watched team video of the season. A 67-second run-through of the robot's differential elevator, the mechanism that set the early template for tall, fast stacking in Override.</p></div><div class="count"><b>39,736</b><span>views</span></div></li>
+
+<li class="row" data-cat="reveal"><span class="rank">02</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=q1-PjdTJpmw">66799T — MOA Reveal</a><p class="sub"><span class="tag">Reveal</span> Samuel Cheng · 5 Aug · 0:44</p><p class="sum">A 44-second teaser of the Taiwanese team's Mall of America machine, posted days before the first signature event. No commentary — just the robot cycling.</p></div><div class="count"><b>27,969</b><span>views</span></div></li>
+
+<li class="row" data-cat="build"><span class="rank">03</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=denfaddoyGE">471B Moonshot — Pits &amp; Parts</a><p class="sub"><span class="tag is-key">Build</span> FUN Robotics Network · 12 Aug · 8:15</p><p class="sum">A pit walkthrough of what the channel calls one of the most complete early-season robots: a double reverse four-bar with motor placement chosen to manage centre of gravity. 471B went on to win Speedway.</p></div><div class="count"><b>27,215</b><span>views</span></div></li>
+
+<li class="row" data-cat="build"><span class="rank">04</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=1CHDyUzr7wo">16610A Snacky Cakes — Pits &amp; Parts</a><p class="sub"><span class="tag is-key">Build</span> FUN Robotics Network · 10 Aug · 13:30</p><p class="sum">The long-form companion to the reveal at #1. The team explains their FRC-borrowed inspiration, the differential lift, and the intake-and-transfer system that feeds it.</p></div><div class="count"><b>26,153</b><span>views</span></div></li>
+
+<li class="row" data-cat="reveal"><span class="rank">05</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=4BDX1jRbqYE">40000A Apogee — Great Planes Robot Reveal</a><p class="sub"><span class="tag">Reveal</span> Riley Markley · 1 Oct · 0:41</p><p class="sum">Apogee's reveal for the Great Planes signature, filmed and cut overnight. The same robot is the subject of The VEX Analyst's double-reverse-four-bar review at #41.</p></div><div class="count"><b>25,654</b><span>views</span></div></li>
+
+<li class="row" data-cat="reveal"><span class="rank">06</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=SAZdFa4tgUQ">10B Burnout — Override Early Season Reveal</a><p class="sub"><span class="tag">Reveal</span> 10B · 5 Aug · 0:39</p><p class="sum">A 39-second Mall of America reveal from one of the teams that keeps turning up in Speedway elimination footage later in this list.</p></div><div class="count"><b>23,349</b><span>views</span></div></li>
+
+<li class="row" data-cat="reveal"><span class="rank">07</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=-boBCDpCYBA">2559X Avocado — Early Season Reveal</a><p class="sub"><span class="tag">Reveal</span> iswr | 2559X · 28 Aug · 1:36</p><p class="sum">A late-August reveal with no description text — the footage is the whole pitch. Watch the cycle speed rather than the mechanism count.</p></div><div class="count"><b>23,120</b><span>views</span></div></li>
+
+<li class="row" data-cat="build"><span class="rank">08</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=uPKYc2L98xc">2393S Valor — Speedway Bot Explanation</a><p class="sub"><span class="tag is-key">Build</span> Valor · 5 Oct · 9:59</p><p class="sum">The team walks through the robot they built for Speedway (18–20 September) and, unusually, the match strategy that drove the design decisions. They lost the Speedway final — see #44 and #47.</p></div><div class="count"><b>23,066</b><span>views</span></div></li>
+
+<li class="row" data-cat="skills"><span class="rank">09</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=K5u0Czu_LWA">169A — 128 Point Driver Skills</a><p class="sub"><span class="tag">Skills</span> Ahmed Obuz · 18 Aug · 1:27</p><p class="sum">An August driver-skills run of 128 points. Useful as the mid-August benchmark: eight weeks later the record had doubled (see #10).</p></div><div class="count"><b>21,282</b><span>views</span></div></li>
+
+<li class="row" data-cat="skills"><span class="rank">10</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=8KwrjJ-qSug">8737M ROKKR — 256 Skills World Record</a><p class="sub"><span class="tag is-wr">World record</span> Max Sun · 12 Oct · 0:59</p><p class="sum">The skills world record as of mid-October, set at Smoky Mountain Forge. One minute, 256 points — double the August benchmark.</p></div><div class="count"><b>20,597</b><span>views</span></div></li>
+
+<li class="row" data-cat="reveal"><span class="rank">11</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=85o03iqMwJo">1220X RoboRedux — Early Season Reveal</a><p class="sub"><span class="tag">Reveal</span> 1220X RoboRedux · 30 Aug · 2:32</p><p class="sum">A longer-than-usual reveal from a team competing in both VEX and RECF events this year, with the robot built specifically for Override.</p></div><div class="count"><b>19,835</b><span>views</span></div></li>
+
+<li class="row" data-cat="analysis"><span class="rank">12</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=luzTikrcFtE">The Best Override Strategy (with sig winners)</a><p class="sub"><span class="tag is-key">Analysis</span> Luke does robotics · 20 Sep · 14:50</p><p class="sum">An interview with 471B Moonshot straight after winning Speedway. Their argument: fighting for toggles is a losing game, so play full offense and swap roles with your alliance partner. Chaptered, including why they removed the carousel.</p></div><div class="count"><b>19,573</b><span>views</span></div></li>
+
+<li class="row" data-cat="build"><span class="rank">13</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=GaxQh9T4MTY">20850Z Full Throttle — Pits &amp; Parts</a><p class="sub"><span class="tag">Build</span> FUN Robotics Network · 13 Aug · 7:18</p><p class="sum">Billed as one of the fastest scoring robots at Mall of America, built around a quick cascading elevator with a custom ball-bearing-style lift.</p></div><div class="count"><b>18,043</b><span>views</span></div></li>
+
+<li class="row" data-cat="reveal"><span class="rank">14</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=zeOvohYnvcc">66994V — MOA Reveal</a><p class="sub"><span class="tag">Reveal</span> daVid · 4 Aug · 0:50</p><p class="sum">A 50-second music-cut reveal from the first wave of Mall of America posts. Pure footage, no build commentary.</p></div><div class="count"><b>17,295</b><span>views</span></div></li>
+
+<li class="row" data-cat="skills"><span class="rank">15</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=SjLbJZK9iZo">95071V — 226 Official Skills</a><p class="sub"><span class="tag">Skills</span> Saratoga Velocity · 22 Sep · 1:57</p><p class="sum">A 226-point official skills run that put the team third in the world at the time of posting — the September step on the way to the 256 record.</p></div><div class="count"><b>16,610</b><span>views</span></div></li>
+
+<li class="row" data-cat="reveal"><span class="rank">16</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=itxeSvQyUGY">8682A Apollo — Early Season Reveal</a><p class="sub"><span class="tag">Reveal</span> Apollo8682A · 24 Aug · 0:56</p><p class="sum">Apollo introduce their robot "Challenger" ahead of Speedway and invite questions in the comments — worth reading for build details not shown on screen.</p></div><div class="count"><b>15,097</b><span>views</span></div></li>
+
+<li class="row" data-cat="match"><span class="rank">17</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=7TZWE0wyJS4">Mall of America 2026 — Semifinals &amp; Finals</a><p class="sub"><span class="tag is-key">Match</span> Robot Stats · 17 Aug · 10:18</p><p class="sum">All four matches from the final stage of the UND signature event at Mall of America — the first Override signature of the season. The single best starting point for how early-season matches actually played.</p></div><div class="count"><b>14,445</b><span>views</span></div></li>
+
+<li class="row" data-cat="match"><span class="rank">18</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=lARnTwHYdVQ">Full Finals — The Highlander Summit Signature</a><p class="sub"><span class="tag is-key">Match</span> VEX Vault · 27 Sep · 10:22</p><p class="sum">All three finals matches from Newark, New Jersey: 12125A &amp; 96Z against 9909M &amp; 1862A. Uncut gameplay, no commentary.</p></div><div class="count"><b>14,173</b><span>views</span></div></li>
+
+<li class="row" data-cat="build"><span class="rank">19</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=bZ50GQcfuTg">66799T AST-onishing T — Pits &amp; Parts</a><p class="sub"><span class="tag">Build</span> FUN Robotics Network · 29 Aug · 8:39</p><p class="sum">The pit breakdown of the Taiwanese robot from #2: a cascade elevator built for tall stacks, a refined claw, and an extender that widens their scoring options.</p></div><div class="count"><b>14,008</b><span>views</span></div></li>
+
+<li class="row" data-cat="reveal"><span class="rank">20</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=EcmxnRCRHB0">81390E — Highlander Summit Reveal</a><p class="sub"><span class="tag">Reveal</span> Kyle Leong · 24 Sep · 0:35</p><p class="sum">A 35-second reveal posted three days before the Highlander Summit signature. No description, no commentary.</p></div><div class="count"><b>13,587</b><span>views</span></div></li>
+
+<li class="row" data-cat="reveal"><span class="rank">21</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=MuEKOcZLOts">2577X Funky Monkeys — Speedway Reveal</a><p class="sub"><span class="tag">Reveal</span> 2577X - Funky Monkeys · 17 Sep · 0:53</p><p class="sum">The team's second reveal of the season, for Speedway. Compare it against their August version at #22 to see six weeks of iteration.</p></div><div class="count"><b>13,412</b><span>views</span></div></li>
+
+<li class="row" data-cat="reveal"><span class="rank">22</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=iW9KTQQv62k">2577X Funky Monkeys — MOA Reveal</a><p class="sub"><span class="tag">Reveal</span> 2577X - Funky Monkeys · 5 Aug · 1:01</p><p class="sum">The August original, with some clips sped up. The pair with #21 is one of the clearest before-and-afters available this season.</p></div><div class="count"><b>13,361</b><span>views</span></div></li>
+
+<li class="row" data-cat="match"><span class="rank">23</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=1Ew8CKi8MPk">Mall of America Finals Matches</a><p class="sub"><span class="tag">Match</span> VRC 98807B · 10 Aug · 5:29</p><p class="sum">A team member's handheld cut of the Mall of America finals, posted within two days of the event — faster than the dedicated match channels.</p></div><div class="count"><b>12,869</b><span>views</span></div></li>
+
+<li class="row" data-cat="match"><span class="rank">24</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=lv85kivDa7w">Silk Road Link 2026 — Semifinals &amp; Finals</a><p class="sub"><span class="tag is-key">Match</span> Robot Stats · 5 Sep · 11:55</p><p class="sum">Four alliances through semifinals and finals from Changji, China. The best look in this list at how Chinese teams are playing Override.</p></div><div class="count"><b>12,523</b><span>views</span></div></li>
+
+<li class="row" data-cat="reveal"><span class="rank">25</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=Kv2xpcYwasI">2982B — MOA Reveal</a><p class="sub"><span class="tag">Reveal</span> 2982B · 1 Aug · 1:41</p><p class="sum">One of the earliest reveals in the window, posted on 1 August ahead of Mall of America. Sister team to 2982X at #46.</p></div><div class="count"><b>12,302</b><span>views</span></div></li>
+
+<li class="row" data-cat="match"><span class="rank">26</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=zhGs-5gah_Y">Speedway Signature Event — Day 1 Live Stream</a><p class="sub"><span class="tag">Match</span> Matthew LeBlanc · 18 Sep · 7:40:59</p><p class="sum">The complete Day 1 stream from Speedway, Indiana — nearly eight hours of qualification matches. Scrub it for specific teams rather than watching through.</p></div><div class="count"><b>11,453</b><span>views</span></div></li>
+
+<li class="row" data-cat="reveal"><span class="rank">27</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=ydecYz09i1Y">1082M — Speedway Reveal</a><p class="sub"><span class="tag">Reveal</span> 1082M · 14 Sep · 0:35</p><p class="sum">A tightly edited 35-second Speedway reveal. The team posted a second, differently cut version the same day — see #45.</p></div><div class="count"><b>10,755</b><span>views</span></div></li>
+
+<li class="row" data-cat="analysis"><span class="rank">28</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=Miaa5JrWwNs">MOA Signature Winners Interview — 10102A &amp; 1028A</a><p class="sub"><span class="tag is-key">Analysis</span> FUN Robotics Network · 9 Aug · 5:49</p><p class="sum">10102A Corean Khicken and 1028A Washed on winning the first signature of the season, with emphasis on how they divided alliance roles — the early reference point for Override meta play.</p></div><div class="count"><b>10,718</b><span>views</span></div></li>
+
+<li class="row" data-cat="reveal"><span class="rank">29</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=paU4dN9R4Qo">16610GVM Good Gravy — Speedway Reveal</a><p class="sub"><span class="tag">Reveal</span> Good Gravy Robotics · 17 Sep · 1:43</p><p class="sum">Posted at 11:56pm the night before Speedway. A sister program to 16610A, and a useful contrast with their approach at #1.</p></div><div class="count"><b>10,558</b><span>views</span></div></li>
+
+<li class="row" data-cat="reveal"><span class="rank">30</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=mCkA0zkZPTg">1028A · 5069Y — Speedway Reveal</a><p class="sub"><span class="tag">Reveal</span> 1028A · 18 Sep · 0:34</p><p class="sum">A joint reveal from the Mall of America winner and 5069Y. At 34 seconds it is the shortest video in the top 50.</p></div><div class="count"><b>10,265</b><span>views</span></div></li>
+
+<li class="row" data-cat="reveal"><span class="rank">31</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=ej0u3LXp-VM">23851C The Aliens — RECF Pinnacle Robot Reveal</a><p class="sub"><span class="tag">Reveal</span> The Aliens · 12 Oct · 0:43</p><p class="sum">An October reveal aimed at the RECF Pinnacle event rather than a VEX signature — a reminder that the two circuits run in parallel this season.</p></div><div class="count"><b>9,865</b><span>views</span></div></li>
+
+<li class="row" data-cat="reveal"><span class="rank">32</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=5K1rNQ4MIOs">15167A SWITCH — Robot Reveal</a><p class="sub"><span class="tag">Reveal</span> SWITCH · 30 Sep · 0:56</p><p class="sum">An end-of-September reveal from the second wave, after teams had seen Speedway results and started revising.</p></div><div class="count"><b>9,635</b><span>views</span></div></li>
+
+<li class="row" data-cat="build"><span class="rank">33</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=Am4mdhS1BFQ">3946E Enigma — Pits &amp; Parts</a><p class="sub"><span class="tag">Build</span> FUN Robotics Network · 21 Aug · 10:18</p><p class="sum">A fan favourite and one of the fastest scorers at Mall of America, with smart motor placement through the drivetrain and lift. 3946E won Speedway a month later.</p></div><div class="count"><b>8,933</b><span>views</span></div></li>
+
+<li class="row" data-cat="reveal"><span class="rank">34</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=q22AZehQ6TA">10G Greenish-Yellow Highlighter — Fall Reveal</a><p class="sub"><span class="tag">Reveal</span> 10G Greenish Yellow Highlighter · 7 Oct · 1:04</p><p class="sum">An October "fall reveal" pointed at Smoky Mountain — the event where the 256-point skills record was set five days later.</p></div><div class="count"><b>8,926</b><span>views</span></div></li>
+
+<li class="row" data-cat="analysis"><span class="rank">35</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=7FxkC9hYtnU">What is The BEST Robot to Build for VEX V5 Override?</a><p class="sub"><span class="tag is-key">Analysis</span> The VEX Analyst · 14 Sep · 19:58</p><p class="sum">The longest analysis piece in the list: an updated ranking of Override meta archetypes with the strengths and weaknesses of each. Start here if you are still choosing a design direction.</p></div><div class="count"><b>8,906</b><span>views</span></div></li>
+
+<li class="row" data-cat="build"><span class="rank">36</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=qeI-pjCd3wY">Build This Automated Roller Mech in VEX</a><p class="sub"><span class="tag is-key">Build</span> Luke does robotics · 5 Oct · 12:51</p><p class="sum">The closest thing to a build tutorial in the top 50. 1069A's automated roller uses an optical sensor to stop on the right colour, plus a blocker; 1069A and 5813R walk through both robots after Great Planes.</p></div><div class="count"><b>8,677</b><span>views</span></div></li>
+
+<li class="row" data-cat="reveal"><span class="rank">37</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=SFfyFCoagXI">31218W Wave — Early Season Reveal</a><p class="sub"><span class="tag">Reveal</span> The Moderately Sized Wave · 14 Aug · 2:47</p><p class="sum">A mid-August reveal aimed at RECF Achieve Pinnacle, at nearly three minutes one of the more thorough early walkthroughs.</p></div><div class="count"><b>8,560</b><span>views</span></div></li>
+
+<li class="row" data-cat="reveal"><span class="rank">38</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=41ZuD9Y_0EU">10A Exothermic Absolute — Great Planes Reveal</a><p class="sub"><span class="tag">Reveal</span> Exothermic Absolute 10A · 27 Sep · 0:55</p><p class="sum">Filmed two weeks before posting, so the team notes the competition robot had already moved past what is on screen. Treat it as a snapshot, not the final build.</p></div><div class="count"><b>8,418</b><span>views</span></div></li>
+
+<li class="row" data-cat="skills"><span class="rank">39</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=gItyhDPMyVQ">Driver Skills — 108 Route</a><p class="sub"><span class="tag">Skills</span> SVT - VEX Robotics · 18 Sep · 1:08</p><p class="sum">A 108-point driver-skills route run in practice. Useful for route construction rather than raw score — the path is the content.</p></div><div class="count"><b>8,383</b><span>views</span></div></li>
+
+<li class="row" data-cat="reveal"><span class="rank">40</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=rhmNkoZrBSw">4189R Corsaires — Fall Reveal</a><p class="sub"><span class="tag">Reveal</span> Corsaires R · 13 Oct · 1:06</p><p class="sum">A mid-October reveal from the third wave of the season, after both Speedway and Great Planes had reshaped expectations.</p></div><div class="count"><b>8,355</b><span>views</span></div></li>
+
+<li class="row" data-cat="analysis"><span class="rank">41</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=EDW69-NS77c">This DOUBLE REVERSE 4-BAR Is Actually Genius?!</a><p class="sub"><span class="tag is-key">Analysis</span> The VEX Analyst · 3 Oct · 9:31</p><p class="sum">A design review of Apogee's robot (the one revealed at #5), which pairs a double reverse four-bar lift with a secondary mechanism. The clearest single explanation of why this lift took over the season.</p></div><div class="count"><b>7,973</b><span>views</span></div></li>
+
+<li class="row" data-cat="build"><span class="rank">42</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=mNegcM4-9XI">1584V Miku Fan Club — Pits &amp; Parts</a><p class="sub"><span class="tag">Build</span> FUN Robotics Network · 25 Aug · 11:39</p><p class="sum">A well-rounded robot with a toggle mechanism, an effective intake, and a smooth two-stack autonomous routine — one of the few pit videos that spends real time on auto.</p></div><div class="count"><b>7,934</b><span>views</span></div></li>
+
+<li class="row" data-cat="reveal"><span class="rank">43</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=zdEoWPkMGeg">3946E — MOA Reveal</a><p class="sub"><span class="tag">Reveal</span> 3946E Kent Denver Robotics · 3 Aug · 1:13</p><p class="sum">Early-August reveal with the power budget stated outright: 55W drive, 22W lift, 11W intake. Rare, concrete numbers for anyone planning their own motor allocation.</p></div><div class="count"><b>7,869</b><span>views</span></div></li>
+
+<li class="row" data-cat="match"><span class="rank">44</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=Z2keejXtF6w">Speedway 2026 — Final #1-2 · 3946E &amp; 471B vs 2393S &amp; 1239E</a><p class="sub"><span class="tag">Match</span> Robot Stats · 20 Sep · 2:36</p><p class="sum">The clinching Speedway final, 82–35 to 3946E and 471B. Pair it with #8, where the losing alliance explains their design.</p></div><div class="count"><b>7,571</b><span>views</span></div></li>
+
+<li class="row" data-cat="reveal"><span class="rank">45</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=rt6wExsq8Sw">1082M — Speedway Reveal (Nobel Prize Edition)</a><p class="sub"><span class="tag">Reveal</span> 1082M · 14 Sep · 0:54</p><p class="sum">The team's alternate cut of the same Speedway robot as #27, posted the same day with different framing and a longer runtime.</p></div><div class="count"><b>7,532</b><span>views</span></div></li>
+
+<li class="row" data-cat="reveal"><span class="rank">46</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=sbiRQYbT0sU">2982X Ultra — Mall of America Reveal</a><p class="sub"><span class="tag">Reveal</span> Ultra 2982X · 5 Aug · 1:14</p><p class="sum">Built in three days with autons written in one hour, by the team's own account — an honest look at what a rushed first-event robot looks like.</p></div><div class="count"><b>7,353</b><span>views</span></div></li>
+
+<li class="row" data-cat="match"><span class="rank">47</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=ME5jv9cAaJg">Speedway 2026 — Final Four: Semifinals &amp; Finals</a><p class="sub"><span class="tag is-key">Match</span> Robot Stats · 22 Sep · 10:32</p><p class="sum">Both semifinals plus the complete finals series from Indianapolis, with an on-screen bracket that updates as matches finish. The single-video version of the Speedway endgame.</p></div><div class="count"><b>7,310</b><span>views</span></div></li>
+
+<li class="row" data-cat="match"><span class="rank">48</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=fT5HTKSHq9s">10B &amp; 8682A vs 2011A &amp; 1233N — Speedway Qual 189</a><p class="sub"><span class="tag">Match</span> VEX Vault · 30 Sep · 2:45</p><p class="sum">A single qualification match from Speedway, uncut. The most-watched individual qual in this list, which says something about the alliance.</p></div><div class="count"><b>7,292</b><span>views</span></div></li>
+
+<li class="row" data-cat="build"><span class="rank">49</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=r6sZ1LuEsz4">11811A Hula Hooligans — MOA Robot Explanation</a><p class="sub"><span class="tag is-key">Build</span> Benjamin Kendrick · 16 Aug · 29:53</p><p class="sum">At almost half an hour, the deepest single build explanation of the season: a double two-bar lift, collection and scoring positions, and a roller claw the builder calls the robot's most innovative part. Chaptered — skip to the sections.</p></div><div class="count"><b>6,506</b><span>views</span></div></li>
+
+<li class="row" data-cat="reveal"><span class="rank">50</span><div class="vid"><a class="vid-title" href="https://www.youtube.com/watch?v=IhhzajK-Nv8">1698V Power Beans — MOA Reveal</a><p class="sub"><span class="tag">Reveal</span> 1698V Power Beans · 6 Aug · 1:26</p><p class="sum">An early-August reveal with no description. Sister team 1698Z appears on the losing side of the Mall of America final.</p></div><div class="count"><b>6,215</b><span>views</span></div></li>
+
+</ol>
+<p class="empty" id="empty" hidden>No videos in that category.</p>
+
+<section>
+  <h2>What the season looks like from the top 50</h2>
+  <p class="sec-note">Six patterns, drawn from the videos above rather than from commentary around them.</p>
+  <div class="notes">
+    <div class="note"><h3>The double reverse four-bar won</h3><p>It appears across the reveals and has two dedicated breakdowns in this list (#41, and <a href="https://www.youtube.com/watch?v=XCMKbX-xhRc">an August one</a> just below the cut). Cascade elevators and differential lifts are the live alternatives.</p></div>
+    <div class="note"><h3>The skills ceiling doubled in eight weeks</h3><p>128 points on 18 August (#9), 226 on 22 September (#15), 256 on 12 October (#10). Watching all three back to back is the fastest read on how the meta moved.</p></div>
+    <div class="note"><h3>Reveals are 24 of the 50</h3><p>Nearly half the list is 35–100 second team reveals. They cluster in three waves: Mall of America in early August, Speedway in mid-September, and Great Planes, Highlander and Pinnacle through October.</p></div>
+    <div class="note"><h3>Pits &amp; Parts is the design archive</h3><p>FUN Robotics Network holds six slots (#3, #4, #13, #19, #33, #42) and covers the robots that go on to win signatures. If you only watch one series, watch this one.</p></div>
+    <div class="note"><h3>Strategy beat mechanism in September</h3><p>The highest-ranked analysis piece (#12) argues that fighting for toggles loses, and that role-swapping with your alliance partner matters more than any single mechanism. 471B won Speedway playing that way.</p></div>
+    <div class="note"><h3>Build tutorials are scarce</h3><p>Only one video in the fifty (#36) actually teaches a mechanism step by step. Most design knowledge this season is being transmitted through pit interviews rather than tutorials.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>Events covered</h2>
+  <p class="sec-note">Where the match and reveal footage in this list comes from.</p>
+  <div class="tbl-wrap">
+  <table>
+    <thead><tr><th>Event</th><th>When</th><th>Winning alliance</th><th class="num">Match videos in 50</th></tr></thead>
+    <tbody>
+      <tr><td>Mall of America Signature (UND)</td><td>8–9 Aug</td><td>10102A &amp; 1028A</td><td class="num">2</td></tr>
+      <tr><td>Silk Road Link, Changji</td><td>early Sep</td><td>not shown</td><td class="num">1</td></tr>
+      <tr><td>Speedway Signature, Indiana</td><td>18–20 Sep</td><td>3946E &amp; 471B</td><td class="num">4</td></tr>
+      <tr><td>The Highlander Summit, Newark</td><td>27 Sep</td><td>12125A &amp; 96Z</td><td class="num">1</td></tr>
+      <tr><td>Great Planes Signature, Nebraska</td><td>2–3 Oct</td><td>1069A &amp; 5813R</td><td class="num">0</td></tr>
+      <tr><td>Smoky Mountain Forge</td><td>mid-Oct</td><td>skills record set here</td><td class="num">0</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section>
+  <h2>Teams that keep reappearing</h2>
+  <p class="sec-note">Across reveals, pit interviews and elimination footage in the fifty.</p>
+  <div class="teams">
+    <span class="team">471B</span><span class="team">3946E</span><span class="team">10102A</span><span class="team">1028A</span><span class="team">16610A</span><span class="team">10B</span><span class="team">2393S</span><span class="team">8682A</span><span class="team">1239E</span><span class="team">66799T</span><span class="team">20850Z</span><span class="team">8737M</span>
+  </div>
+</section>
+
+<section>
+  <h2>Just outside the fifty</h2>
+  <p class="sec-note">Ranked 51–60 in the same window, 5,000–6,200 views.</p>
+  <ul class="also">
+    <li><a href="https://www.youtube.com/watch?v=T8_5rI9mFzo">20850Z Full Throttle — Highlander Reveal</a> <span class="count-inline">6,164</span></li>
+    <li><a href="https://www.youtube.com/watch?v=uXTJGJ-eFLU">Speedway — Final #1-1 (158–0)</a> <span class="count-inline">5,993</span></li>
+    <li><a href="https://www.youtube.com/watch?v=Rov6pimeq_k">Override MOA Finals w/ 1028A &amp; 10102A</a> <span class="count-inline">5,933</span></li>
+    <li><a href="https://www.youtube.com/watch?v=FSpOd3gBuqM">(not) New Endgame Tech? — 5069Y vs 21S</a> <span class="count-inline">5,921</span></li>
+    <li><a href="https://www.youtube.com/watch?v=c1HmsElqCnw">Full Finals — Great Planes Signature</a> <span class="count-inline">5,805</span></li>
+    <li><a href="https://www.youtube.com/watch?v=cqio7C6Pyn8">72202Z QSE Robotics — MOA Reveal</a> <span class="count-inline">5,536</span></li>
+    <li><a href="https://www.youtube.com/watch?v=rXUayo4gGZE">MOA — R16 #1-1</a> <span class="count-inline">5,470</span></li>
+    <li><a href="https://www.youtube.com/watch?v=C33eleAeJ8o">10B vs 32K — Speedway Qual 165</a> <span class="count-inline">5,460</span></li>
+    <li><a href="https://www.youtube.com/watch?v=V9TABXtY8LI">MOA — Final #1-2 (52–0)</a> <span class="count-inline">5,168</span></li>
+    <li><a href="https://www.youtube.com/watch?v=fkxsefFgBw4">80001C — MOA Reveal</a> <span class="count-inline">5,039</span></li>
+  </ul>
+</section>
+
+<section>
+  <h2>Popular, but outside the window</h2>
+  <p class="sec-note">These would place high on views alone. They publish before 1 August 2026, so they are listed here rather than ranked.</p>
+  <ul class="also">
+    <li><a href="https://www.youtube.com/watch?v=lie9BNZVmPw">How China Teams Dominate Override Without Pneumatics</a> <span class="count-inline">35,241 · 26 Jul</span></li>
+    <li><a href="https://www.youtube.com/watch?v=-x2cPDtc6T8">VEX Override MCC Robot "Hermit" — a minimum competitive build</a> <span class="count-inline">19,634 · 28 Jul</span></li>
+    <li><a href="https://www.youtube.com/watch?v=RxxLywS7h1c">This Is the Meta Override Robot Everyone Is Building</a> <span class="count-inline">10,025 · 24 Jul</span></li>
+    <li><a href="https://www.youtube.com/watch?v=sb7UXM1dktI">VEX's World Championship 2027 Location Reveal</a> <span class="count-inline">959K · 9 Oct</span></li>
+  </ul>
+</section>
+
+</div>
+
+<div id="panel-channels" hidden>
+<section>
+  <h2>Channels worth following</h2>
+  <p class="sec-note">The four channels doing the most to explain Override, rather than just record it. Counts are entries across the season and recent lists; subscriber figures are from 14 November 2026.</p>
+  <div class="notes">
+    <div class="note chan">
+      <span class="chan-count">7 entries</span>
+      <a class="chan-name" href="https://www.youtube.com/@FUNRoboticsNetwork">FUN Robotics Network</a>
+      <p class="chan-meta"><span>@FUNRoboticsNetwork</span><span>48.4K subscribers</span></p>
+      <p>The <em>Pits &amp; Parts</em> series: close pit walkthroughs of top-ranked robots, with the builders explaining their own machines. More entries than any other channel, and it consistently covers the teams that go on to win signature events.</p>
+    </div>
+    <div class="note chan">
+      <span class="chan-count">4 entries</span>
+      <a class="chan-name" href="https://www.youtube.com/@lukedoesrobotics">Luke does robotics</a>
+      <p class="chan-meta"><span>@lukedoesrobotics</span><span>16.9K subscribers</span></p>
+      <p>Strategy and match analysis, usually built on interviews with teams who just won. Also the only build tutorial in either list. Strongest on <em>why</em> an alliance won rather than what it was made of.</p>
+    </div>
+    <div class="note chan">
+      <span class="chan-count">4 entries</span>
+      <a class="chan-name" href="https://www.youtube.com/@TheVEXAnalyst">The VEX Analyst</a>
+      <p class="chan-meta"><span>@TheVEXAnalyst</span><span>1.58K subscribers</span></p>
+      <p>Design reviews of individual robots and running coverage of the meta — the double reverse four-bar, then the cascades. The smallest channel here by subscribers and the most consistently analytical.</p>
+    </div>
+    <div class="note chan">
+      <span class="chan-count">2 entries</span>
+      <a class="chan-name" href="https://www.youtube.com/@Joseph973">Joseph973</a>
+      <p class="chan-meta"><span>@Joseph973</span><span>4.92K subscribers</span></p>
+      <p>One mechanism per video, explained close up with linked reference photos — ratcheting claws, cascade and continuous elevators. Only two entries, but one of them is the single most-watched Override video of the past month.</p>
+    </div>
+  </div>
+</section>
+</div>
+
+<footer>
+  <p>Method: candidates gathered from YouTube searches across reveal, pits-and-parts, finals, skills and analysis queries, then each video's exact publish date, duration and view count read from its own page on 14 November 2026 — not from YouTube's rounded "3 mo ago" labels, which proved wrong often enough to matter.</p>
+  <p>Two windows, same method. The season list screened 68 videos published on or after 1 August 2026 and ranks the top 50. The last-30-days list screened 130 videos published 14 October – 14 November 2026 and ranks the top 20. The two lists do not overlap: the newest video in the fifty published 13 October. View counts move, so the order near each cut line will drift.</p>
+  <p>The World Championship location reveal falls inside the window and outdraws everything here at 959K views, but it is a venue announcement rather than design, skills or competition footage, so it sits in the section above rather than in the ranking.</p>
+  <p>Summaries are drawn from each video's own title, description and chapter list. Where a team posted no description, the summary says only what the title and the series format establish.</p>
+</footer>
+</div>
+
+<script>
+(function(){
+  var tabs=document.querySelectorAll('button.fact[data-panel]');
+  function show(id){
+    tabs.forEach(function(t){
+      var on=(t.dataset.panel===id);
+      t.setAttribute('aria-pressed',String(on));
+      var panel=document.getElementById(t.dataset.panel);
+      if(panel){panel.hidden=!on;}
+    });
+    try{window.localStorage.setItem('override-list',id);}catch(e){}
+  }
+  tabs.forEach(function(t){
+    t.addEventListener('click',function(){show(t.dataset.panel);});
+  });
+  var saved=null;
+  try{saved=window.localStorage.getItem('override-list');}catch(e){}
+  if(saved==='panel-recent'||saved==='panel-season'){show(saved);}
+})();
+(function(){
+  var chips=document.querySelectorAll('.chip');
+  var rows=document.querySelectorAll('.row');
+  var empty=document.getElementById('empty');
+  function apply(f){
+    var shown=0;
+    rows.forEach(function(r){
+      var hit=(f==='all'||r.dataset.cat===f);
+      r.hidden=!hit;
+      if(hit){shown++;}
+    });
+    empty.hidden=shown>0;
+  }
+  chips.forEach(function(c){
+    c.addEventListener('click',function(){
+      chips.forEach(function(o){o.setAttribute('aria-pressed',String(o===c));});
+      apply(c.dataset.filter);
+    });
+  });
+})();
+</script>
